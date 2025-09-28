@@ -4,8 +4,9 @@ import { useState } from 'react'
 import Image from 'next/image';
 import { CarProps } from '@/types';
 import CustomButton  from './CustomButton';
+import CarDetailsModal from './CarDetailsModal';
+import StarRating from './StarRating';
 import { calculateCarRent } from '@/utils';
-import { Span } from 'next/dist/trace';
 
 interface CarCardProps {
     car: CarProps;
@@ -15,6 +16,7 @@ const CarCard = ({ car }: CarCardProps) => {
     const { city_mpg, year, make, model, transmission, drive } = car;
 
     const [isOpen, setIsOpen] = useState(false);
+    const [rating, setRating] = useState(0);
 
     const carRent = calculateCarRent(city_mpg, year);
 
@@ -24,7 +26,13 @@ const CarCard = ({ car }: CarCardProps) => {
             <h2 className="car-card__content-title">
                 {make} {model}
             </h2>
-
+            <div className="flex items-center gap-2 mt-2">
+                <StarRating 
+                    initialRating={rating}
+                    onRatingChange={setRating}
+                    size="sm"
+                />
+            </div>
         </div>
 
         <p className='flex mt-6 text-[32px] font-extrabold'>
@@ -74,6 +82,12 @@ const CarCard = ({ car }: CarCardProps) => {
 
             </div>
         </div>
+
+        <CarDetailsModal 
+            isOpen={isOpen} 
+            closeModal={() => setIsOpen(false)} 
+            car={car} 
+        />
     </div>
   )
 }
